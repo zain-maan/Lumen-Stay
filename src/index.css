@@ -1,0 +1,217 @@
+@import 'tailwindcss';
+
+/* Sunset-over-the-ocean palette: warm ivory base, deep lagoon teal for dark sections,
+   and an amber → coral → rose gradient for accents. */
+@theme {
+  --color-sand: #f8f2e9;
+  --color-shell: #efe4d4;
+  --color-line: #e2d5c2;
+  --color-ink: #16120f;
+  --color-stone: #6e6359;
+  --color-clay: #e0622f;
+  --color-clay-dark: #b8471b;
+  --color-glow: #f6b25e;
+  --color-rose: #c8506b;
+  --color-ocean: #0d3b42;
+  --color-deep: #082a30;
+  --color-lagoon: #2f8f8a;
+  --font-display: 'Cormorant Garamond', Georgia, serif;
+  --font-sans: 'Inter', system-ui, sans-serif;
+  --animate-marquee: marquee 38s linear infinite;
+  --animate-sun: sun 14s ease-in-out infinite alternate;
+
+  @keyframes marquee {
+    to {
+      transform: translateX(-50%);
+    }
+  }
+  @keyframes sun {
+    0% {
+      transform: translate(-10%, -5%) scale(1);
+      opacity: 0.55;
+    }
+    100% {
+      transform: translate(12%, 8%) scale(1.25);
+      opacity: 0.8;
+    }
+  }
+}
+
+html {
+  background: var(--color-sand);
+  color: var(--color-ink);
+  font-family: var(--font-sans);
+  -webkit-font-smoothing: antialiased;
+}
+
+html.lenis,
+html.lenis body {
+  height: auto;
+}
+.lenis.lenis-smooth {
+  scroll-behavior: auto !important;
+}
+
+body {
+  overflow-x: hidden;
+}
+
+::selection {
+  background: var(--color-glow);
+  color: var(--color-ink);
+}
+
+:focus-visible {
+  outline: 2px solid var(--color-clay);
+  outline-offset: 3px;
+}
+
+.text-sunset {
+  background: linear-gradient(100deg, var(--color-glow) 0%, var(--color-clay) 50%, var(--color-rose) 100%);
+  -webkit-background-clip: text;
+  background-clip: text;
+  color: transparent;
+}
+
+.bg-sunset {
+  background: linear-gradient(110deg, var(--color-glow), var(--color-clay) 55%, var(--color-rose));
+}
+
+.bg-lagoon {
+  background:
+    radial-gradient(60% 80% at 85% 10%, rgba(47, 143, 138, 0.35), transparent 70%),
+    radial-gradient(50% 60% at 10% 100%, rgba(224, 98, 47, 0.18), transparent 70%),
+    var(--color-deep);
+}
+
+/* Component classes sit in the components layer so Tailwind utilities (sr-only, !p-3, …) can override them. */
+@layer components {
+  .eyebrow {
+    display: inline-flex;
+    align-items: center;
+    gap: 0.75rem;
+    font-size: 0.72rem;
+    letter-spacing: 0.22em;
+    text-transform: uppercase;
+    font-weight: 600;
+    color: var(--color-clay);
+  }
+  .eyebrow::before {
+    content: '';
+    width: 1.75rem;
+    height: 1px;
+    background: currentColor;
+  }
+
+  .btn {
+    position: relative;
+    isolation: isolate;
+    overflow: hidden;
+    display: inline-flex;
+    align-items: center;
+    justify-content: center;
+    gap: 0.5rem;
+    border-radius: 999px;
+    padding: 0.9rem 1.7rem;
+    font-size: 0.9rem;
+    font-weight: 500;
+    transition: color 0.35s, transform 0.2s, opacity 0.2s, box-shadow 0.35s;
+  }
+  /* A fill that rises from the bottom on hover. */
+  .btn::after {
+    content: '';
+    position: absolute;
+    inset: 0;
+    z-index: -1;
+    border-radius: inherit;
+    transform: translateY(101%);
+    transition: transform 0.45s cubic-bezier(0.65, 0, 0.35, 1);
+  }
+  .btn:hover:not(:disabled)::after {
+    transform: translateY(0);
+  }
+  .btn:active {
+    transform: scale(0.98);
+  }
+  .btn:disabled {
+    opacity: 0.4;
+    cursor: not-allowed;
+  }
+  .btn-dark {
+    background: var(--color-ink);
+    color: var(--color-sand);
+  }
+  .btn-dark::after {
+    background: var(--color-clay);
+  }
+  .btn-clay {
+    background: linear-gradient(110deg, var(--color-glow), var(--color-clay) 60%);
+    color: white;
+    box-shadow: 0 10px 30px -10px rgba(224, 98, 47, 0.6);
+  }
+  .btn-clay::after {
+    background: var(--color-ink);
+  }
+  .btn-light {
+    background: white;
+    color: var(--color-ink);
+  }
+  .btn-light::after {
+    background: var(--color-glow);
+  }
+  .btn-ghost {
+    border: 1px solid color-mix(in srgb, currentColor 35%, transparent);
+  }
+  .btn-ghost::after {
+    background: color-mix(in srgb, currentColor 12%, transparent);
+  }
+
+  .field {
+    width: 100%;
+    border-radius: 0.75rem;
+    border: 1px solid var(--color-line);
+    background: white;
+    padding: 0.75rem 1rem;
+    font-size: 0.95rem;
+  }
+  .field:focus {
+    outline: 2px solid var(--color-clay);
+    outline-offset: 0;
+    border-color: transparent;
+  }
+}
+
+/* Masked line wrappers created by SplitText. */
+.split-line {
+  padding-bottom: 0.08em;
+}
+
+.grain::before {
+  content: '';
+  position: absolute;
+  inset: 0;
+  pointer-events: none;
+  opacity: 0.09;
+  mix-blend-mode: overlay;
+  background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='160' height='160'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='.9' numOctaves='2'/%3E%3C/filter%3E%3Crect width='100%25' height='100%25' filter='url(%23n)'/%3E%3C/svg%3E");
+}
+
+.leaflet-container {
+  font-family: var(--font-sans);
+  z-index: 0;
+  background: var(--color-shell);
+}
+
+/* Soften the default OpenStreetMap colours to match the site's warm palette. */
+.map-tiles {
+  filter: saturate(0.55) sepia(0.18) brightness(1.03);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *,
+  *::before,
+  *::after {
+    animation-duration: 0.01ms !important;
+    transition-duration: 0.01ms !important;
+  }
+}
