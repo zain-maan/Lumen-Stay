@@ -80,7 +80,7 @@ export default function Rooms() {
 
         <div className="mt-6 grid gap-10 md:grid-cols-2">
           {rooms.map((r) => (
-            <article key={r.id} className="group">
+            <article key={r.id} data-card className="group">
               <Link to={`/rooms/${r.id}`}>
                 <div className="overflow-hidden rounded-2xl" data-reveal-img data-cursor="View">
                   <Img name={r.image} alt={`${r.name} interior`} className="aspect-[4/3] w-full object-cover transition-transform duration-700 group-hover:scale-105" />

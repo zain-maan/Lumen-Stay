@@ -7,13 +7,17 @@ import { gsap, prefersReducedMotion, SplitText } from '../lib/motion'
 //   data-reveal-img     curtain wipe on a wrapper, the photo inside settles from a zoom
 //   data-count="4.9"    number counts up when it scrolls into view
 //   data-speed="0.15"   parallax drift while scrolling (positive = slower than the page)
+//   data-card="0.1"     phones and tablets: the card flips up into place in 3D (value = delay)
 export function useReveal(scope: RefObject<HTMLElement | null>, deps: unknown[] = []) {
   useLayoutEffect(() => {
     if (!scope.current || prefersReducedMotion()) return
     const ctx = gsap.context(() => {
       const trigger = (el: Element, start = 'top 88%') => ({ trigger: el, start, once: true })
 
+      const small = window.matchMedia('(max-width: 1023px)').matches
+
       gsap.utils.toArray<HTMLElement>('[data-reveal]').forEach((el) => {
+        if (small && el.hasAttribute('data-card')) return // the 3D card entrance below handles it
         gsap.from(el, {
           y: 50,
           opacity: 0,
@@ -48,6 +52,24 @@ export function useReveal(scope: RefObject<HTMLElement | null>, deps: unknown[] 
         const img = el.querySelector('img')
         if (img) tl.from(img, { scale: 1.35, duration: 1.8, ease: 'expo.out' }, 0.2)
       })
+
+      // Cards tip up from below like they are being dealt onto the table. Desktop keeps its own reveals.
+      if (small) {
+        gsap.utils.toArray<HTMLElement>('[data-card]').forEach((el) => {
+          gsap.from(el, {
+            rotateX: 28,
+            y: 60,
+            scale: 0.9,
+            opacity: 0,
+            transformPerspective: 1000,
+            transformOrigin: '50% 100%',
+            duration: 1.1,
+            ease: 'back.out(1.3)',
+            delay: Number(el.dataset.card) || 0,
+            scrollTrigger: trigger(el, 'top bottom-=40'),
+          })
+        })
+      }
 
       gsap.utils.toArray<HTMLElement>('[data-count]').forEach((el) => {
         const target = Number(el.dataset.count)

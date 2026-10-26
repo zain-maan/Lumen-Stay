@@ -19,6 +19,17 @@
   --font-sans: 'Inter', system-ui, sans-serif;
   --animate-marquee: marquee 38s linear infinite;
   --animate-sun: sun 14s ease-in-out infinite alternate;
+  --animate-float: float 5s ease-in-out infinite;
+
+  @keyframes float {
+    0%,
+    100% {
+      transform: translateY(0) rotate(0deg);
+    }
+    50% {
+      transform: translateY(-7px) rotate(-1.5deg);
+    }
+  }
 
   @keyframes marquee {
     to {
@@ -82,6 +93,21 @@ body {
     radial-gradient(60% 80% at 85% 10%, rgba(47, 143, 138, 0.35), transparent 70%),
     radial-gradient(50% 60% at 10% 100%, rgba(224, 98, 47, 0.18), transparent 70%),
     var(--color-deep);
+}
+
+/* Hide the scrollbar on swipe carousels. */
+.no-scrollbar {
+  scrollbar-width: none;
+}
+.no-scrollbar::-webkit-scrollbar {
+  display: none;
+}
+
+/* Little badges bob gently, each on its own beat. */
+@media (prefers-reduced-motion: reduce) {
+  .animate-float {
+    animation: none;
+  }
 }
 
 /* Component classes sit in the components layer so Tailwind utilities (sr-only, !p-3, …) can override them. */

@@ -1,4 +1,4 @@
-import { useLayoutEffect, useRef } from 'react'
+import { useLayoutEffect, useRef, type CSSProperties } from 'react'
 import { Link } from 'react-router-dom'
 import { ROOMS } from '../data'
 import { money } from '../lib/booking'
@@ -7,7 +7,8 @@ import { ArrowRight } from './icons'
 import Img from './Img'
 
 // Desktop: the section pins and the villas slide past horizontally as you scroll.
-// Mobile and reduced motion: a plain vertical list.
+// Phones and tablets: the villa cards stick and stack like a deck, each new one sliding over the last.
+// Reduced motion: a plain vertical list.
 export default function RoomTour() {
   const section = useRef<HTMLElement>(null)
   const track = useRef<HTMLDivElement>(null)
@@ -45,11 +46,29 @@ export default function RoomTour() {
         })
       })
     })
+    mm.add('(max-width: 1023px)', () => {
+      const cards = gsap.utils.toArray<HTMLElement>('[data-tour-card]', track.current)
+      cards.forEach((card, i) => {
+        const next = cards[i + 1]
+        if (!next) return
+        // As the next card rides up over this one, this one sinks back and dims.
+        gsap.to(card.querySelector('[data-stack]'), {
+          scale: 0.9,
+          filter: 'brightness(0.5)',
+          ease: 'none',
+          scrollTrigger: { trigger: next, start: 'top 75%', end: 'top 15%', scrub: true },
+        })
+      })
+      // The photo inside drifts as the card travels, so each one feels alive.
+      cards.forEach((card) => {
+        gsap.fromTo(card.querySelector('img'), { yPercent: -6 }, { yPercent: 6, ease: 'none', scrollTrigger: { trigger: card, start: 'top bottom', end: 'bottom top', scrub: true } })
+      })
+    })
     return () => mm.revert()
   }, [])
 
   return (
-    <section ref={section} className="bg-lagoon grain relative overflow-hidden py-20 text-sand lg:flex lg:h-screen lg:items-center lg:py-0">
+    <section ref={section} className="bg-lagoon grain relative overflow-x-clip py-20 lg:overflow-hidden text-sand lg:flex lg:h-screen lg:items-center lg:py-0">
       <div ref={track} className="relative flex flex-col gap-14 px-4 sm:px-6 lg:w-max lg:flex-row lg:items-center lg:gap-16 lg:pl-[8vw] lg:pr-[8vw]">
         <div className="max-w-md shrink-0 lg:w-[30vw]">
           <p className="eyebrow !text-glow">The villas</p>
@@ -60,11 +79,21 @@ export default function RoomTour() {
         </div>
 
         {ROOMS.map((room, i) => (
-          <article key={room.id} data-tour-card className="group relative shrink-0 lg:w-[38vw]">
-            <span aria-hidden="true" className="pointer-events-none absolute -top-14 right-2 z-10 font-display text-8xl italic text-transparent [-webkit-text-stroke:1px_rgba(246,178,94,0.55)] lg:-top-20 lg:text-[9rem]">
+          <article
+            key={room.id}
+            data-tour-card
+            className="group relative shrink-0 max-lg:sticky max-lg:top-[var(--stack-top)] max-lg:-mt-6 lg:w-[38vw]"
+            style={{ '--stack-top': `calc(4.5rem + ${i * 14}px)` } as CSSProperties}
+          >
+            <span aria-hidden="true" className="pointer-events-none absolute -top-20 right-2 z-10 hidden font-display text-[9rem] italic text-transparent [-webkit-text-stroke:1px_rgba(246,178,94,0.55)] lg:block">
               0{i + 1}
             </span>
-            <Link to={`/rooms/${room.id}`} className="block" data-cursor="View">
+            <Link
+              to={`/rooms/${room.id}`}
+              data-stack
+              className="block origin-top max-lg:rounded-[1.75rem] max-lg:border max-lg:border-white/10 max-lg:bg-ocean max-lg:p-3 max-lg:pb-5 max-lg:shadow-[0_-24px_50px_-20px_rgba(0,0,0,0.7)]"
+              data-cursor="View"
+            >
               <div className="relative aspect-[4/3] overflow-hidden rounded-3xl lg:aspect-[5/4]">
                 <Img
                   name={room.image}
@@ -73,11 +102,12 @@ export default function RoomTour() {
                   className="absolute inset-0 h-full w-full scale-[1.25] object-cover transition-[filter] duration-500 group-hover:brightness-110"
                 />
                 <div className="absolute inset-0 bg-gradient-to-t from-deep/60 via-transparent" />
-                <span className="absolute bottom-4 left-4 rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs backdrop-blur-md">
+                <span className="absolute right-4 top-3 font-display text-5xl italic text-transparent [-webkit-text-stroke:1px_rgba(246,178,94,0.8)] lg:hidden">0{i + 1}</span>
+                <span className="absolute bottom-4 left-4 animate-float rounded-full border border-white/20 bg-white/10 px-3 py-1 text-xs backdrop-blur-md" style={{ animationDelay: `${i * -1.2}s` }}>
                   {room.view} view · up to {room.guests} guests
                 </span>
               </div>
-              <div className="mt-6 flex items-end justify-between gap-4">
+              <div className="mt-6 flex items-end justify-between gap-4 max-lg:mt-4 max-lg:px-2">
                 <div>
                   <h3 className="font-display text-4xl">{room.name}</h3>
                   <p className="mt-1 text-sm text-sand/60">

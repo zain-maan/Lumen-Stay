@@ -35,7 +35,7 @@ export default function Experiences() {
 
       <div className="mx-auto mt-24 max-w-7xl space-y-24 px-4 sm:px-6 lg:space-y-32">
         {EXPERIENCES.map((e, i) => (
-          <article key={e.id} className="grid items-center gap-10 lg:grid-cols-2 lg:gap-20">
+          <article key={e.id} data-card className="grid items-center gap-10 lg:grid-cols-2 lg:gap-20">
             <div className={`overflow-hidden rounded-2xl ${i % 2 ? 'lg:order-2' : ''}`} data-reveal-img>
               <Img name={e.image} alt="" className="aspect-[4/3] w-full object-cover" />
             </div>
@@ -67,7 +67,7 @@ export default function Experiences() {
         <h2 className="font-display text-4xl" data-reveal>Included with every stay</h2>
         <div className="mt-8 grid gap-6 md:grid-cols-3">
           {INCLUDED.map((x, i) => (
-            <div key={x.title} data-reveal={i * 0.08}>
+            <div key={x.title} data-reveal={i * 0.08} data-card={i * 0.08}>
               <Img name={x.image} alt="" className="aspect-[4/3] w-full rounded-2xl object-cover" />
               <p className="mt-4 font-display text-2xl">{x.title}</p>
               <p className="text-sm text-stone">{x.text}</p>

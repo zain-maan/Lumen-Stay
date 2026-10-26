@@ -11,6 +11,7 @@ import MoodPicker from '../components/MoodPicker'
 import RoomTour from '../components/RoomTour'
 import Testimonials from '../components/Testimonials'
 import { EXPERIENCES, LOCATION } from '../data'
+import { useCoverflow } from '../hooks/useCoverflow'
 import { useReveal } from '../hooks/useReveal'
 import { gsap, introDelay, prefersReducedMotion } from '../lib/motion'
 
@@ -25,6 +26,8 @@ const STATS = [
 
 export default function Home() {
   const root = useRef<HTMLDivElement>(null)
+  const expTrack = useRef<HTMLDivElement>(null)
+  useCoverflow(expTrack)
   const hero = useRef<HTMLElement>(null)
   const { hash } = useLocation()
   useReveal(root)
@@ -148,7 +151,7 @@ export default function Home() {
         </div>
         <dl className="mt-20 grid grid-cols-2 gap-8 border-t border-line pt-10 md:grid-cols-4">
           {STATS.map((s, i) => (
-            <div key={s.label} data-reveal={i * 0.08} className="flex flex-col-reverse">
+            <div key={s.label} data-reveal={i * 0.08} data-card={i * 0.08} className="flex flex-col-reverse">
               <dt className="mt-1 text-sm text-stone">{s.label}</dt>
               <dd className="font-display text-5xl sm:text-6xl">
                 <span data-count={s.value}>{s.value}</span>
@@ -179,20 +182,31 @@ export default function Home() {
               All experiences <ArrowRight size={16} />
             </Link>
           </div>
-          <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
+          {/* Phones: a swipe carousel with depth. Larger screens: a staggered grid. */}
+          <div
+            ref={expTrack}
+            className="no-scrollbar -mx-4 mt-12 flex snap-x snap-mandatory gap-4 overflow-x-auto px-[11%] pb-6 pt-2 sm:mx-0 sm:mt-14 sm:grid sm:grid-cols-2 sm:gap-6 sm:overflow-visible sm:p-0 lg:grid-cols-4"
+          >
             {EXPERIENCES.map((e, i) => (
-              <Link to="/experiences" key={e.id} className={`group block ${i % 2 ? 'lg:mt-16' : ''}`} data-cursor="Explore">
+              <Link
+                to="/experiences"
+                key={e.id}
+                className={`group block w-[78%] shrink-0 snap-center will-change-transform sm:w-auto ${i % 2 ? 'lg:mt-16' : ''}`}
+                data-cursor="Explore"
+              >
                 <div className="relative overflow-hidden rounded-2xl" data-reveal-img={i * 0.1} data-skew>
                   <Img
                     name={e.image}
                     sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"
                     className="aspect-[3/4] w-full object-cover transition-transform duration-[1.2s] ease-out group-hover:scale-110"
                   />
-                  <div className="absolute inset-0 bg-gradient-to-t from-deep/80 via-transparent opacity-80 transition-opacity duration-500 group-hover:opacity-100" />
-                  <span className="absolute left-4 top-4 rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink">{e.price}</span>
+                  <div className="absolute inset-0 bg-gradient-to-t from-deep/95 via-deep/40 to-transparent transition-opacity duration-500 sm:from-deep/80 sm:via-transparent sm:opacity-80 sm:group-hover:opacity-100" />
+                  <span className="absolute left-4 top-4 animate-float rounded-full bg-white/90 px-3 py-1 text-xs font-medium text-ink shadow-lg" style={{ animationDelay: `${i * -1.3}s` }}>
+                    {e.price}
+                  </span>
                   <div className="absolute inset-x-0 bottom-0 p-5 text-white">
                     <h3 className="font-display text-3xl leading-tight">{e.title}</h3>
-                    <p className="mt-2 max-h-0 overflow-hidden text-sm text-white/80 opacity-0 transition-all duration-500 group-hover:max-h-24 group-hover:opacity-100">
+                    <p className="mt-2 max-h-24 overflow-hidden text-sm text-white/80 transition-all duration-500 sm:max-h-0 sm:opacity-0 sm:group-hover:max-h-24 sm:group-hover:opacity-100">
                       {e.text}
                     </p>
                   </div>
@@ -200,6 +214,9 @@ export default function Home() {
               </Link>
             ))}
           </div>
+          <p className="flex items-center justify-center gap-2 text-xs uppercase tracking-[0.2em] text-stone sm:hidden">
+            Swipe <ArrowRight size={14} className="animate-pulse" />
+          </p>
         </div>
       </section>
 

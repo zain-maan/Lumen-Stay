@@ -13,7 +13,12 @@ export default function MoodPicker() {
   const room = ROOMS.find((r) => r.id === mood.room)!
   const picks = EXPERIENCES.filter((e) => (mood.experiences as readonly string[]).includes(e.id))
 
+  const shown = useRef(moodId)
+
+  // Animate the new picks when the mood changes. The first render is left to the scroll reveal.
   useLayoutEffect(() => {
+    if (shown.current === moodId) return
+    shown.current = moodId
     if (prefersReducedMotion() || !result.current) return
     gsap.fromTo(
       result.current.children,
@@ -49,7 +54,7 @@ export default function MoodPicker() {
       </div>
 
       <div ref={result} className="mt-10 grid gap-6 lg:grid-cols-[1.3fr_1fr_1fr]" aria-live="polite">
-        <Link to={`/rooms/${room.id}`} className="group relative min-h-80 overflow-hidden rounded-2xl text-white">
+        <Link to={`/rooms/${room.id}`} data-card className="group relative min-h-80 overflow-hidden rounded-2xl text-white">
           <Img
             name={room.image}
             className="absolute inset-0 h-full w-full object-cover transition-transform duration-700 group-hover:scale-105"
@@ -64,8 +69,8 @@ export default function MoodPicker() {
             </p>
           </div>
         </Link>
-        {picks.map((e) => (
-          <div key={e.id} className="overflow-hidden rounded-2xl bg-white">
+        {picks.map((e, i) => (
+          <div key={e.id} data-card={0.1 + i * 0.1} className="overflow-hidden rounded-2xl bg-white shadow-[0_20px_40px_-30px_rgba(22,18,15,0.5)]">
             <Img name={e.image} alt="" className="aspect-[4/3] w-full object-cover" />
             <div className="p-5">
               <p className="font-display text-2xl">{e.title}</p>
