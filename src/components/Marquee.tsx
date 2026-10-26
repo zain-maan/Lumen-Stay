@@ -7,6 +7,7 @@ export default function Marquee({ tone = 'sunset' }: { tone?: 'sunset' | 'light'
   const items = [...WORDS, ...WORDS]
   return (
     <div
+      data-skew
       className={`relative overflow-hidden py-5 sm:py-7 ${tone === 'sunset' ? 'bg-sunset text-white' : 'bg-shell text-ink'}`}
       aria-hidden="true"
     >

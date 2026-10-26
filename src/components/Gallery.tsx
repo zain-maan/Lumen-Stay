@@ -22,7 +22,7 @@ export default function Gallery() {
               className={`flex flex-col gap-4 sm:gap-6 ${c === 1 ? 'lg:pt-0' : 'lg:pt-24'} ${c === 2 ? 'hidden lg:flex' : ''}`}
             >
               {column.map((p, i) => (
-                <figure key={p.image} className="group relative overflow-hidden rounded-2xl" data-reveal-img={i * 0.1} data-cursor="View">
+                <figure key={p.image} className="group relative overflow-hidden rounded-2xl" data-reveal-img={i * 0.1} data-cursor="View" data-skew>
                   <Img
                     name={p.image}
                     sizes="(min-width: 1024px) 30vw, 50vw"

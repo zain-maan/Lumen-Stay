@@ -6,7 +6,7 @@ import Curtain from './components/Curtain'
 import Footer from './components/Footer'
 import Nav from './components/Nav'
 import ScrollProgress from './components/ScrollProgress'
-import { ScrollTrigger, scrollToTop, startSmoothScroll } from './lib/motion'
+import { ScrollTrigger, scrollToTop, startSmoothScroll, startVelocitySkew } from './lib/motion'
 import Home from './pages/Home'
 import NotFound from './pages/NotFound'
 
@@ -20,6 +20,7 @@ export default function App() {
   const { pathname } = useLocation()
 
   useEffect(() => startSmoothScroll(), [])
+  useEffect(() => startVelocitySkew(), [])
 
   useLayoutEffect(() => {
     scrollToTop()

@@ -3,6 +3,8 @@ import { Link, useLocation } from 'react-router-dom'
 import BookingBar from '../components/BookingBar'
 import Gallery from '../components/Gallery'
 import { ArrowRight, Star } from '../components/icons'
+import CoverReveal from '../components/CoverReveal'
+import HeroWater from '../components/HeroWater'
 import Img from '../components/Img'
 import Marquee from '../components/Marquee'
 import MoodPicker from '../components/MoodPicker'
@@ -75,14 +77,11 @@ export default function Home() {
       {/* Hero */}
       <section ref={hero} className="relative flex min-h-[100svh] flex-col overflow-hidden bg-deep text-white">
         <div data-hero-media className="absolute inset-0">
-          <Img
-            name="hero"
-            priority
-            sizes="100vw"
-            alt="Infinity pool on the cliffs of Uluwatu overlooking the ocean"
-            data-hero-img
-            className="h-full w-full scale-105 object-cover"
-          />
+          {/* The photo paints first; the WebGL water fades in over it once ready. */}
+          <div data-hero-img className="absolute inset-0 scale-105">
+            <Img name="hero" priority sizes="100vw" alt="Infinity pool on the cliffs of Uluwatu overlooking the ocean" className="h-full w-full object-cover" />
+            <HeroWater />
+          </div>
         </div>
         <div className="absolute inset-0 bg-gradient-to-b from-deep/60 via-deep/10 to-deep/85" />
         <div aria-hidden="true" className="animate-sun pointer-events-none absolute -left-[10%] top-[5%] h-[60vmax] w-[60vmax] rounded-full bg-[radial-gradient(circle,rgba(246,178,94,0.55),rgba(224,98,47,0.15)_45%,transparent_70%)] mix-blend-screen" />
@@ -166,6 +165,8 @@ export default function Home() {
 
       <MoodPicker />
 
+      <CoverReveal />
+
       {/* Experiences */}
       <section className="bg-shell py-24 lg:py-36">
         <div className="mx-auto max-w-7xl px-4 sm:px-6">
@@ -181,7 +182,7 @@ export default function Home() {
           <div className="mt-14 grid gap-6 sm:grid-cols-2 lg:grid-cols-4">
             {EXPERIENCES.map((e, i) => (
               <Link to="/experiences" key={e.id} className={`group block ${i % 2 ? 'lg:mt-16' : ''}`} data-cursor="Explore">
-                <div className="relative overflow-hidden rounded-2xl" data-reveal-img={i * 0.1}>
+                <div className="relative overflow-hidden rounded-2xl" data-reveal-img={i * 0.1} data-skew>
                   <Img
                     name={e.image}
                     sizes="(min-width: 1024px) 25vw, (min-width: 640px) 50vw, 100vw"

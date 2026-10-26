@@ -19,13 +19,15 @@ Small hotels lose 15 to 25% of every booking to OTAs because their own websites 
 - **4-step booking flow**: dates → villa → extras → guest details, with a live price summary, taxes, validation and a confirmation screen. All choices live in the URL, so a half-finished booking survives a refresh or can be shared.
 - **AI concierge chat** that answers questions on villas, transfers, dining, prices and policies (demo intents; designed to plug into an LLM).
 - **Interactive map** (Leaflet) with the resort and nearby beaches, temple and airport.
-- **Motion design**: branded intro with a loading counter, curtain page transitions, headings that rise line by line (GSAP SplitText), curtain-wipe photo reveals, parallax gallery columns, counting stats, an endless marquee, magnetic buttons and a custom cursor.
-- **Fast photos**: every photo is a locally hosted WebP in two sizes with `srcset`, and a tiny blurred preview shows instantly while it loads (`node scripts/fetch-images.mjs` regenerates them). The hero photo is preloaded and inner pages are code-split.
+- **3D ocean hero**: the hero photo becomes a WebGL water surface (Three.js shader) with a sea swell, ripples that follow the pointer and raindrops on phones. It loads after the page, pauses when off screen and falls back to the plain photo.
+- **Cover reveal**: a pinned section where a framed photo of the cliff pool opens to fill the screen as you scroll.
+- **Motion design**: branded intro with a loading counter, curtain page transitions, headings that rise line by line (GSAP SplitText), curtain-wipe photo reveals, parallax gallery columns, counting stats, an endless marquee, cards that lean with scroll speed, magnetic buttons and a custom cursor.
+- **Fast photos**: every photo is a locally hosted AVIF with a WebP fallback in up to three sizes with `srcset`, and a tiny blurred preview shows instantly while it loads. The hero is preloaded, the intro waits for it, and inner pages and three.js are code-split. `node scripts/fetch-images.mjs` downloads the photos and `python scripts/optimize-images.py` (Pillow) re-encodes them.
 - Filters and sorting on the villas page, smooth scrolling (Lenis), reduced-motion support, keyboard and screen-reader friendly, fully responsive.
 
 ## Tech stack
 
-React 19 · TypeScript · Vite · Tailwind CSS v4 · GSAP (ScrollTrigger, SplitText) · Lenis · React Router · Leaflet · Vercel
+React 19 · TypeScript · Vite · Tailwind CSS v4 · GSAP (ScrollTrigger, SplitText) · Three.js · Lenis · React Router · Leaflet · Vercel
 
 ## Run locally
 
