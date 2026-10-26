@@ -14,7 +14,7 @@ type Props = {
 
 const PREVIEWS = lqip as Partial<Record<ImageName, string>>
 
-export const imageWidths = (name: ImageName) => (name === 'hero' ? [480, 960, 1600] : [480, 960, 1280])
+export const imageWidths = (name: ImageName) => (name === 'hero' ? [640, 1280, 1920, 2560] : [640, 1280, 1920])
 
 export const imageSrc = (name: ImageName, width: number, format: 'avif' | 'webp' = 'webp') => `/images/${name}-${width}.${format}`
 

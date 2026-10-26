@@ -94,7 +94,7 @@ export default function HeroWater() {
       const el = host.current
       const mobile = window.matchMedia('(pointer: coarse)').matches
       const renderer = new THREE.WebGLRenderer({ antialias: false, alpha: false, powerPreference: 'high-performance' })
-      renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 1 : 1.5))
+      renderer.setPixelRatio(Math.min(window.devicePixelRatio, mobile ? 1.75 : 2))
       el.appendChild(renderer.domElement)
       renderer.domElement.style.cssText = 'position:absolute;inset:0;width:100%;height:100%'
 
@@ -124,7 +124,7 @@ export default function HeroWater() {
       // Reuse whichever file the <img> underneath picked (AVIF or WebP, right size), so the photo
       // is only downloaded once.
       const photo = el.parentElement?.querySelector('img')
-      const src = photo?.currentSrc || imageSrc('hero', window.innerWidth > 1000 ? 1600 : 960)
+      const src = photo?.currentSrc || imageSrc('hero', window.innerWidth > 1000 ? 1920 : 1280)
       new THREE.TextureLoader().load(src, (tex) => {
         if (disposed) return tex.dispose()
         tex.colorSpace = THREE.SRGBColorSpace
